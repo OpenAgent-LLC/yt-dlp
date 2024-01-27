@@ -168,6 +168,14 @@ from .version import CHANNEL, ORIGIN, RELEASE_GIT_HEAD, VARIANT, __version__
 if compat_os_name == 'nt':
     import ctypes
 
+### Castera modifications Start
+ie_exported = {}
+def get_ie_exported():
+    global ie_exported
+    return ie_exported
+
+### Castera modifications Stop
+
 
 class YoutubeDL:
     """YoutubeDL class.
@@ -2921,19 +2929,20 @@ class YoutubeDL:
         best_format, downloaded_formats = formats_to_download[-1], []
         ### Castera modifications Start
 
-        ytdl_info_only = os.getenv('YTDL_INFO_ONLY')
-        if (ytdl_info_only and ytdl_info_only=='1'):
-            super_info_dict = copy.deepcopy(info_dict)
-            super_info_dict['best_format'] = copy.deepcopy(best_format)
+        #ytdl_info_only = os.getenv('YTDL_INFO_ONLY')
+        #if (ytdl_info_only and ytdl_info_only=='1'):
+        global ie_exported
+        ie_exported = copy.deepcopy(info_dict)
+        ie_exported['best_format'] = copy.deepcopy(best_format)
 
-            filename = 'output/ie_result.json'
-            self._ensure_dir_exists(filename)
-            with open(filename, 'w') as file:
-                json.dump(super_info_dict, file, indent=4,sort_keys=True )
+        #filename = '/tmp/ie_result.json'
+        #self._ensure_dir_exists(filename)
+        #with open(filename, 'w') as file:
+        #    json.dump(super_info_dict, file, indent=4,sort_keys=True )
+        #
+        #print(f'IE Result data saved to {filename}')
 
-            print(f'IE Result data saved to {filename}')
-
-            download = False
+        download = False
 
         ### Castera modifications Stop
 

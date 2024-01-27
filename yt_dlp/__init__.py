@@ -61,10 +61,11 @@ from .utils import (
     write_string,
 )
 from .utils.networking import std_headers
-from .YoutubeDL import YoutubeDL
+### Castera modifications Start
+from .YoutubeDL import YoutubeDL, get_ie_exported
+### Castera modifications Stop
 
 _IN_CLI = False
-
 
 def _exit(status=0, *args):
     for msg in args:
@@ -940,6 +941,12 @@ def parse_options(argv=None):
         'compat_opts': opts.compat_opts,
     })
 
+### Castera modifications Start
+def _real_main_castera(argv=None):
+    _real_main(argv)
+
+    return get_ie_exported()
+### Castera modifications Stop
 
 def _real_main(argv=None):
     setproctitle('yt-dlp')
@@ -1006,7 +1013,9 @@ def main(argv=None):
     global _IN_CLI
     _IN_CLI = True
     try:
+        ### Castera modifications Start
         _exit(*variadic(_real_main(argv)))
+        ### Castera modifications Stop
     except DownloadError:
         _exit(1)
     except SameFileError as e:
