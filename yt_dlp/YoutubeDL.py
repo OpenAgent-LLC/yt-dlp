@@ -2919,6 +2919,24 @@ class YoutubeDL:
 
         requested_ranges = tuple(self.params.get('download_ranges', lambda *_: [{}])(info_dict, self))
         best_format, downloaded_formats = formats_to_download[-1], []
+        ### Castera modifications Start
+
+        ytdl_info_only = os.getenv('YTDL_INFO_ONLY')
+        if (ytdl_info_only and ytdl_info_only=='1'):
+            super_info_dict = copy.deepcopy(info_dict)
+            super_info_dict['best_format'] = copy.deepcopy(best_format)
+
+            filename = 'output/ie_result.json'
+            self._ensure_dir_exists(filename)
+            with open(filename, 'w') as file:
+                json.dump(super_info_dict, file, indent=4,sort_keys=True )
+
+            print(f'IE Result data saved to {filename}')
+
+            download = False
+
+        ### Castera modifications Stop
+
         if download:
             if best_format and requested_ranges:
                 def to_screen(*msg):
