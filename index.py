@@ -3,12 +3,20 @@ import json
 import yt_dlp
 
 def handler(event, context):
-
     print(f'event: {event}')
+
+    # The body of the request is a JSON string in 'event['body']'
+    body = event.get('body')
+
+    if not body:
+            return {
+                'statusCode': 400,
+                'body': json.dumps('No body in request')
+            }
 
     try:
         # The body of the request is a JSON string in 'event['body']'
-        url = event.get('url')
+        url = json.loads(body).get('url')
 
         if not url or url == '':
             return {
